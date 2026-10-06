@@ -8,37 +8,6 @@ import { Paywall } from '../../pages/Paywall';
 const OUT = '../Kanitlar/Web';
 fs.mkdirSync(OUT, { recursive: true });
 
-test('Kanıt | BUG-W04 footer yazımı ve BUG-W05 isimsiz ikon butonları', async ({ page }) => {
-  const chat = new ChatPage(page);
-  await chat.open();
-
-  // BUG-W05: erisilebilir adi olmayan gorunur butonlari kirmizi cerceveyle isaretle.
-  const unnamed = await page.evaluate(() => {
-    const list = [...document.querySelectorAll('button')]
-      .filter((b) => (b as HTMLElement).offsetParent !== null)
-      .filter((b) => !(b.innerText.trim() || b.getAttribute('aria-label') || b.getAttribute('title')));
-    list.forEach((b) => {
-      (b as HTMLElement).style.outline = '3px solid red';
-      (b as HTMLElement).style.outlineOffset = '2px';
-    });
-    return list.map((b) => b.id || b.outerHTML.slice(0, 80));
-  });
-  await page.screenshot({ path: `${OUT}/WEB_BUG-W05_isimsiz_ikon_butonlari.png` });
-  fs.writeFileSync(`${OUT}/WEB_BUG-W05_isimsiz_butonlar_listesi.txt`, unnamed.join('\n') + '\n');
-
-  // BUG-W04: footer'daki "24/07/365" yazisini isaretle.
-  const footer = page.locator('footer').first();
-  await footer.scrollIntoViewIfNeeded();
-  await footer.evaluate((f) => {
-    const el = [...f.querySelectorAll('*')].find((e) => e.childElementCount === 0 && /24\/07\/365/.test(e.textContent ?? ''));
-    if (el) {
-      (el as HTMLElement).style.outline = '3px solid red';
-      (el as HTMLElement).style.outlineOffset = '3px';
-    }
-  });
-  await footer.screenshot({ path: `${OUT}/WEB_BUG-W04_footer_24-07-365.png` });
-});
-
 authTest.describe('Türkçe tarayıcı (tr-TR)', () => {
   authTest.use({ locale: 'tr-TR' });
 

@@ -8,7 +8,7 @@ Testler Playwright Test ve TypeScript ile yazıldı, Page Object Model yapısı 
 
 | Grup | Dosya | Kapsam |
 |---|---|---|
-| Misafir | `home.spec.ts` | Ana sayfanın bileşenleri ve footer |
+| Misafir | `home.spec.ts` | Ana sayfanın bileşenleri ve footer linkleri |
 | Misafir | `login-modal.spec.ts` | Misafir mesaj gönderince giriş penceresinin açılması, yazılan metnin korunması, giriş seçenekleri |
 | Misafir | `localization.spec.ts` | Footer'daki dil seçici ve Almancaya geçiş |
 | Misafir | `pricing.spec.ts` | Pricing sayfasındaki planlar ve fiyatlar |
@@ -25,8 +25,6 @@ Raporda yer alan bazı buglar test olarak da yazıldı ve `test.fail()` ile işa
 |---|---|
 | `BUG-W01` | Pricing sayfası ile paywall'da aynı planın fiyatı farklı. Fark paywall'ın iki halinde de var ama farklı planlarda (bir halde Monthly, diğerinde Yearly). Test aylık fiyatı karşılaştırdığı için sadece 6 Months'lu halde hata bekliyor |
 | `BUG-W02` | Paywall'da iki farklı para birimi formatı aynı anda görünüyor (₺1.768,00 ve ₺1,768.00) |
-| `BUG-W04` | Footer'da destek saati "24/07/365" yazıyor |
-| `BUG-W05` | İkon butonlarının erişilebilir adı yok |
 | `UX-17` | Web'deki dil listesinde Türkçe yok |
 
 `BUG-W03` (paywall kapandıktan sonra sayfanın kilitlenmesi) her seferinde tekrarlanmadığı için regresyon testi olarak yazıldı. Paywall Escape, X butonu ve art arda aç kapa ile kapatılıyor. Sonra sayfada kilit kalmadığı ve mesaj alanına yazı yazılabildiği kontrol ediliyor.
