@@ -8,7 +8,7 @@ test.describe('Pricing sayfası (misafir)', () => {
 
     for (const plan of ['Yearly', 'Monthly'] as const) {
       const price = await pricing.planPrice(plan);
-      expect(price.raw, `${plan} fiyatı bulunamadı`).toMatch(/^₺/);
+      expect(price.raw, `${plan} fiyatı bulunamadı`).toMatch(/^[₺$€£]/);
       expect(price.value).toBeGreaterThan(0);
     }
     await expect(page.getByText('Start', { exact: true })).toHaveCount(2);

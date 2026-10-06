@@ -6,6 +6,12 @@ import { BasePage } from './BasePage';
  *  - Varyant A: Monthly / Quarterly / 6 Months (aylik fiyat pricing sayfasindan farkli, BUG-W01)
  *  - Varyant B: Monthly / Quarterly / Yearly (fiyatlar pricing sayfasiyla ayni)
  */
+/**
+ * Fiyatlar kullanicinin ulkesine gore farkli para biriminde geliyor: Turkiye'den ₺, ABD'deki CI sunucusundan $.
+ * Bu yuzden fiyat okuyan ifadeler belirli bir para birimine bagli degil.
+ */
+export const CURRENCY_PRICE = /[₺$€£]\s?[\d.,]+/;
+
 export type Plan = 'Monthly' | 'Quarterly' | '6 Months' | 'Yearly';
 export const PLAN_MONTHS: Record<Plan, number> = { Monthly: 1, Quarterly: 3, '6 Months': 6, Yearly: 12 };
 
@@ -42,14 +48,14 @@ export class Paywall extends BasePage {
 
   /** Planin kartta yazan aylik fiyati (ornek "₺982,35" -> 982.35). */
   async perMonthPrice(plan: Plan): Promise<{ raw: string; value: number }> {
-    const raw = (await this.planCard(plan).innerText()).match(/₺\s?[\d.,]+/)?.[0] ?? '';
+    const raw = (await this.planCard(plan).innerText()).match(CURRENCY_PRICE)?.[0] ?? '';
     return { raw, value: parseTry(raw) };
   }
 
   /** "you will be charged ₺2,947.06 every 3 months" cumlesindeki tutar. */
   async chargedAmount(): Promise<{ raw: string; value: number }> {
     const text = await this.dialog.innerText();
-    const raw = text.match(/charged\s+(₺\s?[\d.,]+)/)?.[1] ?? '';
+    const raw = text.match(new RegExp(`charged\\s+(${CURRENCY_PRICE.source})`))?.[1] ?? '';
     return { raw, value: parseTry(raw) };
   }
 

@@ -147,5 +147,6 @@ Site sabit `id`'ler kullanıyor (`#chat-input-textarea`, `#model-select-trigger`
 - Her test kendi tarayıcı profiliyle açılır: misafir testleri boş, geçici bir profille; giriş gerektiren testler kayıtlı profille. Profil dosyasında Chrome'un çeviri önerisi kapatılır.
 - Site yarım kalan mesajı taslak olarak saklıyor. Mesaj alanına yazan testler önce alanı temizler.
 - Sayfa ilk açılışta oturum yüklenince bir kez daha render oluyor; bu bitmeden yapılan tıklamalar kayboluyor. `ChatPage.waitForAppReady()` üst bardaki Login/Get Pro butonunu ve geçmiş listesinin yüklenmesini bekler.
+- Fiyatlar ziyaretçinin ülkesine göre farklı para biriminde geliyor (Türkiye'den ₺, ABD'deki CI sunucusundan $). Fiyat okuyan kodlar para birimine bağlı değildir.
 - Hiçbir testte "Subscribe Now"a basılmaz, satın alma yapılmaz.
 - Testler sıralı (1 worker) koşar: ücretsiz kotayı korumak ve sohbet testlerinin birbirini etkilememesi için.
