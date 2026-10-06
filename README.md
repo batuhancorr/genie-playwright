@@ -23,7 +23,7 @@ Raporda yer alan bazı buglar test olarak da yazıldı ve `test.fail()` ile işa
 
 | Test | Bug |
 |---|---|
-| `BUG-W01` | Pricing sayfası ile paywall'daki aylık fiyat farklı. Yalnızca 6 aylık plan gösterilen paywall'da görülüyor |
+| `BUG-W01` | Pricing sayfası ile paywall'da aynı planın fiyatı farklı. Fark paywall'ın iki halinde de var ama farklı planlarda (bir halde Monthly, diğerinde Yearly). Test aylık fiyatı karşılaştırdığı için sadece 6 Months'lu halde hata bekliyor |
 | `BUG-W02` | Paywall'da iki farklı para birimi formatı aynı anda görünüyor (₺1.768,00 ve ₺1,768.00) |
 | `BUG-W04` | Footer'da destek saati "24/07/365" yazıyor |
 | `BUG-W05` | İkon butonlarının erişilebilir adı yok |

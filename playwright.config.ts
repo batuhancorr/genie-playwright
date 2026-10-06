@@ -32,5 +32,7 @@ export default defineConfig({
     { name: 'authenticated', testDir: './tests/authenticated' },
     // Performans ölçümleri normal koşuya dahil değil: npm run test:perf
     { name: 'perf', testDir: './tests/perf', timeout: 300_000 },
+    // Bug kayitlari icin ekran goruntusu toplar: npm run evidence
+    { name: 'evidence', testDir: './tests/evidence' },
   ],
 });

@@ -13,7 +13,8 @@
     "report": "playwright show-report",
     "typecheck": "tsc --noEmit",
     "test:perf": "playwright test --project=perf",
-    "check:cookie": "node scripts/cookie-reload-check.mjs"
+    "check:cookie": "node scripts/cookie-reload-check.mjs",
+    "evidence": "playwright test --project=evidence --headed"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0",
