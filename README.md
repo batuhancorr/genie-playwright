@@ -1,55 +1,47 @@
-# Genie Web (chatbotai.com) – Playwright E2E Testleri
+# Genie Web (chatbotai.com) Playwright Testleri
 
-AppNation QA Engineer case study kapsamında, Genie'nin web sürümü **chatbotai.com** için hazırlanmış uçtan uca test otomasyonu.
+Bu repo AppNation QA Engineer case study'si için hazırlandı. Genie'nin web sürümü olan chatbotai.com'un uçtan uca test otomasyonunu içeriyor.
 
-- **Araç:** Playwright Test (TypeScript)
-- **Yapı:** Page Object Model
-- **Raporlama:** HTML rapor; hata durumunda ekran görüntüsü, video ve trace
-- **CI:** GitHub Actions (misafir testleri)
+Testler Playwright Test ve TypeScript ile yazıldı, Page Object Model yapısı kullanıldı. Her koşudan sonra HTML rapor oluşuyor ve hata olursa ekran görüntüsü, video ve trace otomatik ekleniyor. GitHub Actions her push'ta misafir testlerini çalıştırıyor.
 
-## Neyi test ediyor?
+## Neler test ediliyor
 
-| Proje | Dosya | Kapsam |
+| Grup | Dosya | Kapsam |
 |---|---|---|
-| `guest` | `home.spec.ts` | Ana sayfa bileşenleri, footer linkleri |
-| `guest` | `login-modal.spec.ts` | Misafir mesaj gönderince giriş penceresi; yazılan metnin korunması; giriş seçenekleri |
-| `guest` | `localization.spec.ts` | Footer dil seçicisi, Almanca'ya geçiş |
-| `guest` | `pricing.spec.ts` | Pricing sayfasındaki plan ve fiyatlar |
-| `authenticated` | `chat.spec.ts` | **Ana akış:** mesaj gönderme, akışlı yanıtın tamamlanması, bilgi doğruluğu, aynı sohbette bağlamın korunması, geçmişte görünme, HTML/script'in çalıştırılmaması |
-| `authenticated` | `model-gating.spec.ts` | Model listesi; ücretsiz kullanıcının Pro modelle karşılaştığı kısıt |
-| `authenticated` | `paywall.spec.ts` | Plan seçimi ve toplam tutar hesabı; paywall'ın 3 farklı yolla kapatılması sonrası sayfanın tıklanabilir kalması |
-| `perf` | `web-perf.spec.ts` | Sayfa açılış metrikleri (TTFB, FCP, LCP, TBT, CLS), sohbet yanıt süresi, sohbet geçişleri. Normal koşuya dahil değil |
+| Misafir | `home.spec.ts` | Ana sayfanın bileşenleri ve footer |
+| Misafir | `login-modal.spec.ts` | Misafir mesaj gönderince giriş penceresinin açılması, yazılan metnin korunması, giriş seçenekleri |
+| Misafir | `localization.spec.ts` | Footer'daki dil seçici ve Almancaya geçiş |
+| Misafir | `pricing.spec.ts` | Pricing sayfasındaki planlar ve fiyatlar |
+| Giriş yapılmış | `chat.spec.ts` | Ana akış. Mesaj gönderme, yanıtın tamamlanması, bilginin doğruluğu, aynı sohbette bağlamın korunması, sohbetin geçmişte görünmesi ve HTML/script içeren yanıtın çalıştırılmaması |
+| Giriş yapılmış | `model-gating.spec.ts` | Model listesi ve ücretsiz kullanıcının Pro modelle karşılaştığı kısıt |
+| Giriş yapılmış | `paywall.spec.ts` | Plan seçimi ve toplam tutar hesabı, paywall üç farklı yolla kapatılınca sayfanın kilitlenmemesi |
+| Performans | `web-perf.spec.ts` | Sayfa açılış metrikleri, sohbet yanıt süresi ve sohbet geçişleri. Normal koşuya dahil değil |
 
-### Bilinen buglar (`test.fail`)
+### Bilinen buglar
 
-Raporda yer alan bazı buglar test olarak da yazıldı ve `test.fail()` ile işaretlendi. Bu testler bug var olduğu sürece **"expected to fail"** olarak geçer. Bug düzeltildiğinde test beklenmedik şekilde başarılı olur ve Playwright bunu bildirir; o zaman işaret kaldırılır.
+Raporda yer alan bazı buglar test olarak da yazıldı ve `test.fail()` ile işaretlendi. Bug durdukça bu testler "beklenen hata" olarak geçiyor. Bug düzeltildiğinde test beklenmedik şekilde başarılı olur ve Playwright bunu haber verir. O zaman işaret kaldırılır.
 
 | Test | Bug |
 |---|---|
-| `BUG-W01` | Pricing sayfası ile paywall'daki aylık fiyat farklı (yalnızca "6 Months" planlı paywall varyantında) |
-| `BUG-W02` | Paywall'da karışık para birimi formatı (₺1.768,00 / ₺1,768.00) |
-| `BUG-W04` | Footer'da "24/07/365" yazım hatası |
-| `BUG-W05` | İkon butonların erişilebilir adı yok |
-| `UX-17` | Web dil listesinde Türkçe yok |
+| `BUG-W01` | Pricing sayfası ile paywall'daki aylık fiyat farklı. Yalnızca 6 aylık plan gösterilen paywall'da görülüyor |
+| `BUG-W02` | Paywall'da iki farklı para birimi formatı aynı anda görünüyor (₺1.768,00 ve ₺1,768.00) |
+| `BUG-W04` | Footer'da destek saati "24/07/365" yazıyor |
+| `BUG-W05` | İkon butonlarının erişilebilir adı yok |
+| `UX-17` | Web'deki dil listesinde Türkçe yok |
 
-`BUG-W03` (paywall kapandıktan sonra sayfanın kilitlenmesi) aralıklı olduğu için **regresyon testi** olarak yazıldı: Escape, X butonu ve art arda aç-kapat ile kapatıldıktan sonra `body`'de `pointer-events: none` kalmadığı ve mesaj alanına tıklayıp yazı yazılabildiği doğrulanır.
+`BUG-W03` (paywall kapandıktan sonra sayfanın kilitlenmesi) her seferinde tekrarlanmadığı için regresyon testi olarak yazıldı. Paywall Escape, X butonu ve art arda aç kapa ile kapatılıyor. Sonra sayfada kilit kalmadığı ve mesaj alanına yazı yazılabildiği kontrol ediliyor.
 
-### Paywall varyantları
+### Paywall'ın iki farklı hali
 
-Paywall hesaba göre iki farklı plan setiyle açılabiliyor (muhtemelen A/B testi): **Monthly / Quarterly / 6 Months** veya **Monthly / Quarterly / Yearly**. Testler sabit bir plan listesi beklemez, ekranda hangi planlar varsa onları kontrol eder. `BUG-W01` testi hangi varyantın açıldığını rapora not olarak ekler ve yalnızca fiyat farkının görüldüğü varyantta "beklenen hata" olarak işaretlenir.
+Paywall hesaba göre iki farklı plan setiyle açılabiliyor. Birinde Monthly, Quarterly ve 6 Months var, diğerinde Monthly, Quarterly ve Yearly. Bu muhtemelen bir A/B testi. Testler sabit bir plan listesi beklemiyor, ekranda hangi planlar varsa onları kontrol ediyor. `BUG-W01` testi hangi halin açıldığını rapora not ediyor.
 
-### Yapay zekâ yanıtlarını doğrulama yaklaşımı
+### Yapay zekâ yanıtları nasıl doğrulanıyor
 
-Model çıktıları deterministik değildir. Bu yüzden testler birebir metin karşılaştırmaz, **davranışı** doğrular:
-
-- Yeni yanıt balonu oluştu mu, URL `/c/<id>` oldu mu?
-- Yanıt metni boş değil ve art arda iki okumada değişmiyor mu (akış tamamlandı)?
-- "Yeniden üret" aksiyonu göründü mü?
-- Cevap beklenen anahtar kelimeyi içeriyor mu (örnek: "Ankara", "Batu")?
+Model her seferinde farklı cevap verdiği için testler metni birebir karşılaştırmıyor. Bunun yerine davranışa bakıyor. Yeni yanıt geldi mi, adres `/c/<id>` oldu mu, yanıt boş değil mi ve akış bitti mi diye kontrol ediliyor. Akışın bitip bitmediği yanıtın art arda iki okumada değişmemesinden ve "yeniden üret" butonunun görünmesinden anlaşılıyor. Son olarak cevapta beklenen anahtar kelime var mı diye bakılıyor, örneğin "Ankara" ya da kullanıcının söylediği isim.
 
 ## Kurulum
 
-Gereksinimler: Node.js 20+ ve Google Chrome.
+Node.js 20 veya üstü gerekiyor.
 
 ```bash
 npm install
@@ -59,94 +51,95 @@ cp .env.example .env
 
 ## Çalıştırma
 
-### 1. Misafir testleri (giriş gerekmez)
+### Misafir testleri
+
+Giriş gerektirmiyor.
 
 ```bash
 npm run test:guest
 ```
 
-### 2. Giriş gerektiren testler
+### Giriş gerektiren testler
 
-Sohbet web'de giriş istiyor. Giriş bir kez, kalıcı bir tarayıcı profiline yapılır; testler bu profili kullanır:
+Sohbet için web'de giriş yapmak gerekiyor. Giriş bir kez yapılıyor ve kalıcı bir tarayıcı profiline kaydediliyor. Testler sonra bu profili kullanıyor.
 
 ```bash
-npm run auth        # Tarayıcı açılır, kendi hesabınla giriş yap (5 dk süre)
+npm run auth        # tarayıcı açılır, kendi hesabınla giriş yaparsın (5 dakika süre var)
 npm run test:auth
 ```
 
-- Profil `.auth/profile` klasörüne yazılır. Bu klasör `.gitignore`'dadır, repoya girmez.
-- **Neden `storageState` değil?** Site Firebase Auth kullanıyor ve oturumu IndexedDB'de tutuyor. `storageState` ile kaydedilen oturum testlerde geri yüklenmedi; kalıcı profil (`launchPersistentContext`) tüm tarayıcı depolamasını olduğu gibi korur. Uygulaması: `tests/fixtures.ts`.
-- Profil yoksa giriş gerektiren testler hata vermez, açıklamayla **skip** edilir.
-- Google, otomasyon tarayıcısında girişi engellerse "Continue with Email" ile giriş yapılabilir.
-- **Kota:** Ücretsiz hesapta günlük sorgu hakkı sınırlıdır. `chat.spec.ts` her koşumda 3 sorgu harcar. Kota dolduğunda mesaj gönderilince paywall açılır; sohbet testleri bu durumda hata vermez, açıklamayla **skip** edilir.
+Profil `.auth/profile` klasörüne yazılıyor. Bu klasör `.gitignore` içinde olduğu için repoya girmiyor.
 
-### 3. Hepsi, rapor ve demo
+Neden `storageState` kullanılmadı? Site girişte Firebase kullanıyor ve oturumu IndexedDB'de saklıyor. `storageState` ile kaydedilen oturum testlerde geri gelmedi. Kalıcı profil ise tarayıcının tüm verisini olduğu gibi tuttuğu için sorunsuz çalıştı. İlgili kod `tests/fixtures.ts` içinde.
+
+Profil yoksa giriş gerektiren testler hata vermez, açıklamasıyla birlikte atlanır. Google otomasyon tarayıcısında girişe izin vermezse "Continue with Email" ile giriş yapılabilir.
+
+Ücretsiz hesabın günlük sorgu hakkı sınırlı. `chat.spec.ts` her koşuda 3 sorgu harcıyor. Hak bitince mesaj gönderildiğinde paywall açılıyor. Sohbet testleri bu durumda hata vermiyor, atlanıyor.
+
+### Hepsi birden, rapor ve demo
 
 ```bash
 npm test             # tüm testler
-npm run report       # HTML raporu aç
-npm run test:demo    # demo modu: tarayıcı görünür, adımlar yavaşlatılır, videolar kaydedilir
+npm run report       # HTML raporu açar
+npm run test:demo    # demo modu
 ```
 
-Demo modunda (`VIDEO=on`) sayfanın üstünde o an çalışan testin adı gösterilir. Test bitince etikette sonuç yazar ("Test geçti", "Bilinen bug doğrulandı" veya "Atlandı") ve pencere kapanmadan önce kısa bir süre beklenir. Bu etiket `aria-hidden` ve tıklamaları engellemez, test sonucunu etkilemez.
+Demo modunda tarayıcı görünür açılıyor ve adımlar yavaşlatılıyor. Sayfanın üstünde o an çalışan testin adı yazıyor. Test bitince aynı yerde sonucu görünüyor ve pencere kapanmadan önce kısa bir süre bekleniyor. Bu etiket tıklamaları engellemiyor ve test sonucunu etkilemiyor.
 
-Videolar ve trace dosyaları `test-results/` klasörüne yazılır. Bir hatayı adım adım incelemek için:
+Video ve trace dosyaları `test-results/` klasörüne yazılıyor. Bir hatayı adım adım incelemek için şu komut kullanılabilir.
 
 ```bash
 npx playwright show-trace test-results/<test-klasoru>/trace.zip
 ```
 
-### 4. Performans ölçümleri
+### Performans ölçümleri
 
 ```bash
 npm run test:perf
 ```
 
-- Misafir olarak `/` ve `/pricing` sayfaları 3'er kez boş önbellekle açılır. TTFB, FCP, LCP, TBT, CLS, DOMContentLoaded ve load süreleri ölçülür.
-- Giriş yapılmış hesapla sabit bir soruyla 5 kez sohbet başlatılır. İlk kelimenin gelme süresi ve yanıtın tamamlanma süresi ölçülür.
-- Yeni sohbet açma ve geçmişten sohbet açma süreleri 5'er kez ölçülür.
-- Sonuçlar konsola tablo olarak yazılır ve `perf-results/*.json` dosyalarına kaydedilir.
+Misafir olarak ana sayfa ve `/pricing` sayfası boş önbellekle üçer kez açılıyor. Her açılışta TTFB, FCP, LCP, TBT, CLS, DOMContentLoaded ve load süreleri ölçülüyor. Giriş yapılmış hesapla aynı soru beş kez soruluyor ve ilk kelimenin gelme süresi ile yanıtın tamamlanma süresi ölçülüyor. Yeni sohbet açma ve geçmişten sohbet açma süreleri de beşer kez ölçülüyor. Sonuçlar konsola tablo olarak yazılıyor ve `perf-results/` klasörüne JSON olarak kaydediliyor.
 
-### 5. Çerez banner'ı kontrolü
+### Çerez banner'ı kontrolü
 
 ```bash
 npm run check:cookie
 ```
 
-Temiz bir tarayıcıda mesaj alanına yazı yazar, çerez banner'ında "Decline all"a basar ve sayfanın yeniden yüklenip yüklenmediğini, yazılan metnin korunup korunmadığını raporlar (UX-30). Ekran görüntüleri ve video `../Kanitlar/Web` klasörüne kaydedilir.
+Temiz bir tarayıcıda mesaj alanına yazı yazıyor ve çerez banner'ında "Decline all"a basıyor. Sonra sayfanın yeniden yüklenip yüklenmediğini ve yazılan metnin kalıp kalmadığını raporluyor (UX-30). Ekran görüntüleri ve video `../Kanitlar/Web` klasörüne kaydediliyor.
 
 ## Proje yapısı
 
 ```
 pages/                  Page Object'ler
-  BasePage.ts           modal sonrası sayfa kilidi kontrolü
+  BasePage.ts           pencere kapandıktan sonra sayfa kilidi kontrolü
   ChatPage.ts           mesaj alanı, model seçici, yanıt bekleme
   LoginModal.ts         giriş penceresi
-  Paywall.ts            plan seçimi, fiyat okuma (TR/EN format), kapatma
-  PricingPage.ts        /pricing
+  Paywall.ts            plan seçimi, fiyat okuma, kapatma
+  PricingPage.ts        /pricing sayfası
 tests/
   guest/                giriş gerektirmeyen testler
   authenticated/        giriş gerektiren testler
-  perf/                 performans ölçümleri (npm run test:perf)
+  perf/                 performans ölçümleri
   fixtures.ts           tarayıcı profilleri, çerez banner'ı engeli, demo etiketi
 scripts/
-  save-auth.mjs         tek seferlik giriş (kalıcı profil)
+  save-auth.mjs         tek seferlik giriş
   cookie-reload-check.mjs  çerez reddedilince sayfa yenileniyor mu kontrolü
 browser-options.ts      Chrome başlatma ayarları ve demo yavaşlatması
-playwright.config.ts    projeler, timeout'lar, video/trace ayarları
-.github/workflows/      CI: her push'ta misafir testleri
+playwright.config.ts    projeler, süre sınırları, video ve trace ayarları
+.github/workflows/      her push'ta misafir testlerini çalıştıran CI
 ```
 
-## Locator stratejisi
+## Locator seçimi
 
-Site sabit `id`'ler kullanıyor (`#chat-input-textarea`, `#model-select-trigger`, `#chat-header-toggle-primary-sidebar-button`). Bunlar öncelikli kullanıldı; diğer yerlerde erişilebilirlik rolleri (`getByRole`) tercih edildi. Gözlem: `assistant-message-container` id'si her mesajda tekrar ediyor, bu yüzden yanıtlar benzersiz `data-message-id` ile seçiliyor.
+Site bazı elemanlarda sabit `id` kullanıyor (`#chat-input-textarea`, `#model-select-trigger` gibi). Bunlar varsa öncelikle onlar kullanıldı. Diğer yerlerde erişilebilirlik rolleri (`getByRole`) tercih edildi. Bir gözlem olarak `assistant-message-container` id'si her mesajda tekrar ediyor. Bu yüzden yanıtlar her mesaja özel olan `data-message-id` ile seçiliyor.
 
 ## Notlar
 
-- Çerez banner'ı ("Decline all" seçilince) sayfayı baştan yüklüyor. Bu yenileme test ortasında açık pencereleri ve listeleri kapattığı için banner script'i testlerde yüklenmez. Yedek olarak `page.addLocatorHandler` banner görünürse otomatik kapatır.
-- Her test kendi tarayıcı profiliyle açılır: misafir testleri boş, geçici bir profille; giriş gerektiren testler kayıtlı profille. Profil dosyasında Chrome'un çeviri önerisi kapatılır.
-- Site yarım kalan mesajı taslak olarak saklıyor. Mesaj alanına yazan testler önce alanı temizler.
-- Sayfa ilk açılışta oturum yüklenince bir kez daha render oluyor; bu bitmeden yapılan tıklamalar kayboluyor. `ChatPage.waitForAppReady()` üst bardaki Login/Get Pro butonunu ve geçmiş listesinin yüklenmesini bekler.
-- Fiyatlar ziyaretçinin ülkesine göre farklı para biriminde geliyor (Türkiye'den ₺, ABD'deki CI sunucusundan $). Fiyat okuyan kodlar para birimine bağlı değildir.
-- Hiçbir testte "Subscribe Now"a basılmaz, satın alma yapılmaz.
-- Testler sıralı (1 worker) koşar: ücretsiz kotayı korumak ve sohbet testlerinin birbirini etkilememesi için.
+- Çerez banner'ında "Decline all" seçilince site sayfayı baştan yüklüyor. Bu yenileme test sırasında açık pencereleri ve listeleri kapattığı için testlerde banner yüklenmiyor. Yine de görünürse otomatik kapatan bir yedek var.
+- Her test kendi tarayıcı profiliyle açılıyor. Misafir testleri boş ve geçici bir profille, giriş gerektiren testler kayıtlı profille başlıyor. Chrome'un çeviri önerisi profilde kapatılıyor.
+- Site ilk açılışta oturum yüklenince bir kez daha çiziliyor ve bu bitmeden yapılan tıklamalar kayboluyor. `ChatPage.waitForAppReady()` bunu bekliyor.
+- Site yarım kalan mesajı taslak olarak saklıyor. Mesaj alanına yazan testler önce alanı temizliyor.
+- Fiyatlar ziyaretçinin ülkesine göre farklı para biriminde geliyor. Türkiye'den bakınca ₺, ABD'deki CI sunucusundan bakınca $ görünüyor. Fiyat okuyan kodlar para biriminden bağımsız.
+- Hiçbir testte "Subscribe Now"a basılmıyor ve satın alma yapılmıyor.
+- Testler sırayla tek worker ile koşuyor. Böylece ücretsiz kota korunuyor ve sohbet testleri birbirini etkilemiyor.
