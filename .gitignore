@@ -1,0 +1,9 @@
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+.auth/
+.env
+.DS_Store
+perf-results/
+_debug/

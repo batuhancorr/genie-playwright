@@ -1,0 +1,25 @@
+{
+  "name": "genie-playwright",
+  "version": "1.0.0",
+  "description": "chatbotai.com (Genie Web) icin Playwright E2E testleri - AppNation QA Case Study",
+  "private": true,
+  "scripts": {
+    "auth": "node scripts/save-auth.mjs",
+    "test": "playwright test --project=guest --project=authenticated",
+    "test:guest": "playwright test --project=guest",
+    "test:auth": "playwright test --project=authenticated",
+    "test:headed": "playwright test --project=guest --project=authenticated --headed",
+    "test:demo": "cross-env VIDEO=on playwright test --project=guest --project=authenticated --headed --workers=1",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit",
+    "test:perf": "playwright test --project=perf",
+    "check:cookie": "node scripts/cookie-reload-check.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^22.10.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
+    "typescript": "^5.7.0"
+  }
+}
