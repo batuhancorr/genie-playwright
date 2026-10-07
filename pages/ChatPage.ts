@@ -46,6 +46,9 @@ export class ChatPage extends BasePage {
 
   async typeMessage(text: string): Promise<void> {
     await this.input.click();
+    // Site yarim kalan mesaji taslak olarak sakliyor. Onceki kosudan kalan metin varsa once temizlenir.
+    await this.page.keyboard.press('ControlOrMeta+A');
+    await this.page.keyboard.press('Backspace');
     await this.page.keyboard.type(text);
   }
 

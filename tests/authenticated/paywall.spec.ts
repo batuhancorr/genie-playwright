@@ -68,6 +68,9 @@ test.describe('Paywall (giriş yapılmış, Free)', () => {
       await page.keyboard.press('Backspace');
       await page.keyboard.type('tiklanabilir');
       expect(await chat.inputText()).toBe('tiklanabilir');
+      // Yazilan metin taslak olarak kalmasin diye alan temizlenir.
+      await page.keyboard.press('ControlOrMeta+A');
+      await page.keyboard.press('Backspace');
     });
   }
 
